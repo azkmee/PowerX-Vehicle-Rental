@@ -5,7 +5,7 @@ Final Project for the subject Fundamentals in Python (Intermediate) in PowerX Pr
 
 - Evaluators: Oka Kurniawan, Kenny Choo
 
-
+Software Documentation: <a href="docs/html-docs/index.html" target="_blank">Click Here</a>
 
 ## Setup
 
