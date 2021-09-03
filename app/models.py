@@ -20,8 +20,9 @@ class User(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(64), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
-	questions = db.relationship('Question', backref='from_user', 
-								lazy='dynamic')
+	balance = db.relationship('Balance',backref='user',lazy='dynamic')
+	# questions = db.relationship('Question', backref='from_user', 
+	# 							lazy='dynamic')
 	def set_password(self, password):
 		self.password_hash = generate_password_hash(password)
 
@@ -30,6 +31,18 @@ class User(UserMixin, db.Model):
 
 	def __repr__(self):
 		return f'<User {self.username:}>'
+
+class Balance(db.Model):
+	__tablename__ = 'balance'
+	id = db.Column(db.Integer, primary_key=True)
+
+	balance = db.Column(db.Float(64))
+	uid = db.Column(db.Integer, db.ForeignKey(User.id))
+
+class Vehicle(db.Model):
+	__tablename__ = 'vehicle'
+	id = db.Column(db.Integer, primary_key=True)
+
 
 # create your model for the database here
 

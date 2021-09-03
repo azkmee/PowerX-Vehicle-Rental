@@ -2,7 +2,7 @@ from app import application
 from flask import render_template, flash, redirect, url_for
 from app.forms import LoginForm, RegistrationForm 
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import User 
+from app.models import Balance, User 
 from werkzeug.urls import url_parse
 from app import db
 from flask import request 
@@ -25,6 +25,13 @@ def users():
 	usernames = [u.username for u in users]
 	return render_template('users.html', title='Users',
 							users=usernames)
+
+@application.route('/balance')
+@login_required
+def balance():
+	user = User.query.all()
+	
+	return render_template('balance.html', title='Balance')
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():
