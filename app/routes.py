@@ -7,6 +7,10 @@ from werkzeug.urls import url_parse
 from app import db
 from flask import request 
 from app.serverlibrary import * 
+from flask_wtf import FlaskForm
+from wtforms import DecimalField, StringField, PasswordField, BooleanField, SubmitField, SelectMultipleField, IntegerField, HiddenField
+from wtforms.validators import DataRequired, NumberRange, ValidationError
+
 import sys
 
 @application.route('/')
@@ -27,12 +31,26 @@ def users():
 	return render_template('users.html', title='Users',
 							users=usernames)
 
-@application.route('/balance')
+class TopUpForm(FlaskForm):
+	value = DecimalField('Top Up Value', validators= [NumberRange(min=0, max=10, message='bla')] )
+	submit = SubmitField('Top Up')
+
+@application.route('/balance', methods=["GET","POST"])
 @login_required
 def balance():
 	user = User.query.filter_by(username = current_user.username).first()
-		
-	return render_template('balance.html', title='Balance', balance=user.balance)
+
+	form=TopUpForm()
+
+	if form.validate_on_submit():
+		value = form.value.data
+		print(value, file=sys.stderr)
+		user.add_balance(float(value))
+		db.session.commit()
+		return redirect('/balance')
+
+    
+	return render_template('balance.html', title='Balance', balance=user.balance, form=form)
 
 @application.route('/topup', methods=["GET","POST"])
 def topUp():
