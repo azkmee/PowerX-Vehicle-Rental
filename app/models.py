@@ -20,7 +20,8 @@ class User(UserMixin, db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	username = db.Column(db.String(64), index=True, unique=True)
 	password_hash = db.Column(db.String(128))
-	balance = db.relationship('Balance',backref='user',lazy='dynamic')
+	# balance = db.relationship('Balance',backref='user',lazy='dynamic')
+	balance = db.Column(db.Float(64))
 	# questions = db.relationship('Question', backref='from_user', 
 	# 							lazy='dynamic')
 	def set_password(self, password):
@@ -28,16 +29,27 @@ class User(UserMixin, db.Model):
 
 	def check_password(self, password):
 		return check_password_hash(self.password_hash, password)
+	
+	def check_balance(self):
+		return self.balance
+	
+	def deduct_balance(self, value):
+		self.balance = self.balance - value
+		return self.balance
+	
+	def add_balance(self, value):
+		self.balance = self.balance + value
+		return self.balance
 
 	def __repr__(self):
 		return f'<User {self.username:}>'
 
-class Balance(db.Model):
-	__tablename__ = 'balance'
-	id = db.Column(db.Integer, primary_key=True)
+# class Balance(db.Model):
+# 	__tablename__ = 'balance'
+# 	id = db.Column(db.Integer, primary_key=True)
 
-	balance = db.Column(db.Float(64))
-	uid = db.Column(db.Integer, db.ForeignKey(User.id))
+# 	balance = db.Column(db.Float(64))
+# 	uid = db.Column(db.Integer, db.ForeignKey(User.id))
 
 class Vehicle(db.Model):
 	__tablename__ = 'vehicle'

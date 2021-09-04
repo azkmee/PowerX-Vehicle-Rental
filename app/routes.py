@@ -1,12 +1,13 @@
 from app import application
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, request
 from app.forms import LoginForm, RegistrationForm 
 from flask_login import current_user, login_user, logout_user, login_required
-from app.models import Balance, User 
+from app.models import User 
 from werkzeug.urls import url_parse
 from app import db
 from flask import request 
 from app.serverlibrary import * 
+import sys
 
 @application.route('/')
 @application.route('/index')
@@ -29,9 +30,33 @@ def users():
 @application.route('/balance')
 @login_required
 def balance():
-	user = User.query.all()
-	
-	return render_template('balance.html', title='Balance')
+	user = User.query.filter_by(username = current_user.username).first()
+		
+	return render_template('balance.html', title='Balance', balance=user.balance)
+
+@application.route('/topup', methods=["GET","POST"])
+def topUp():
+	if request.method == 'POST':
+		user = User.query.filter_by(username = current_user.username).first()
+		req = request.form
+		value = req['value']
+		
+		new_balance = user.add_balance(float(value))
+		db.session.commit()
+		print(new_balance, file=sys.stderr)
+		return redirect('/balance')
+
+@application.route('/deduct', methods=["GET","POST"])
+def deduct():
+	if request.method == 'POST':
+		user = User.query.filter_by(username = current_user.username).first()
+		req = request.form
+		value = req['value']
+		
+		new_balance = user.deduct_balance(float(value))
+		db.session.commit()
+		print(new_balance, file=sys.stderr)
+		# return redirect('/balance')
 
 @application.route('/login', methods=['GET', 'POST'])
 def login():
@@ -60,11 +85,13 @@ def logout():
 @application.route('/register', methods=['GET', 'POST'])
 def register():
 	if current_user.is_authenticated:
+		
 		return redirect(url_for('index'))
 	form = RegistrationForm()
 	if form.validate_on_submit():
-		user = User(username=form.username.data)
+		user = User(username=form.username.data, balance = 0)
 		user.set_password(form.password.data)
+
 		db.session.add(user)
 		db.session.commit()
 		flash('Congratulations, you are now a registered user.')

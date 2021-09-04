@@ -2,7 +2,13 @@
 
 {% block app_content %}
 
-    <h1>I am inside balance {{current_user.username}}</h1>
-    <!-- <p>I have ${{ current_user.balance }}</p>  -->
+    <h1>Hi {{current_user.username}}</h1>
+    <h3>You have ${{ balance }} in my wallet</h3> 
+    <p>Please enter amount to top up:</p>
+    <form action='/topup' method="POST">
+        <input type='text' name='value'>
+        <button onClick="console.log('here')" type='submit'>Submit</button>
+    </form>
+    
 
 {% endblock %}
