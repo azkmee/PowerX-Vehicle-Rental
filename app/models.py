@@ -38,6 +38,7 @@ class User(UserMixin, db.Model):
 
 class Customer(User):
 	balance = db.Column(db.Float(64))
+	
 	def __init__(self):
 		self.balance = 0
 		self.type = 'customer'
@@ -75,6 +76,10 @@ class Vehicle(db.Model):
 	vehicle_type = db.Column(db.String(64))
 	unit_price = db.Column(db.Float(64))
 	# update odo
+
+	def update_odo(self, new_odo):
+		self.odometer = new_odo
+		
 
 class Car(Vehicle):
 	def __init__(self):

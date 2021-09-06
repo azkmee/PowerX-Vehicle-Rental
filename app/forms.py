@@ -37,10 +37,10 @@ class AddAdminForm(FlaskForm):
 
 
 class AddVehicleForm(FlaskForm):
-	vehicleType = RadioField('Vehicle Type', choices = [('Car', 'Car'),('Lorry','Lorry'),('Van','Van')])
+	vehicleType = RadioField('Vehicle Type', choices = [('Car', 'Car'),('Lorry','Lorry'),('Van','Van')], validators=[DataRequired()])
 	vehicleNum = StringField('Vehicle Number', validators=[DataRequired()])
 	modelNumber = StringField('Model Number', validators=[DataRequired()])
-	purchaseDate = DateField('Purchase Date', validators=[DataRequired()])
+	# purchaseDate = DateField('Purchase Date', validators=[DataRequired()]) 
 	odometer = DecimalField('Odometer', validators= [DataRequired()] )
 	submit = SubmitField('Add Vehicle')
 
