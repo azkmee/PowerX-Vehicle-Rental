@@ -39,6 +39,12 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return f'<User {self.username:}>'
 
+# class Admin(User):
+#     super().usertype = "Admin"
+#
+# class Customer(User):
+#     super().usertype = "Customer"
+
 # create your model for the database here
 # class UserDetails(db.Model):
 #     __tablename__ = 'userdetails'

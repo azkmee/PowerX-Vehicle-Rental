@@ -6,7 +6,8 @@
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">User</th>
+      <th scope="col">Username</th>
+      <th scope="col">Type</th>
     </tr>
   </thead>
   <tbody>
@@ -14,7 +15,10 @@
   	<tr>
       <th scope="row" class="lead">{{ idx+1 }}</th>
       <td class="lead">
-      	#Replace Me#
+      	{{users[idx].username}}
+      </td>
+        <td class="lead">
+      	{{users[idx].usertype}}
       </td>
     </tr>
   {% endfor %}
