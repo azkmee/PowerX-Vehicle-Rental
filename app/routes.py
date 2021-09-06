@@ -58,6 +58,15 @@ def register():
 	if form.validate_on_submit():
 		user = User(username=form.username.data)
 		user.set_password(form.password.data)
+		user.usertype = "Admin" if form.isadmin.data else "Customer"
+		user.dob = form.dob.data
+		user.email = form.email.data
+		user.mobile = form.mobile.data
+		user.address = form.address.data
+		user.wallet = 0
+		user.isactive = True
+		# print(user.__repr__())
+
 		db.session.add(user)
 		db.session.commit()
 		flash('Congratulations, you are now a registered user.')
