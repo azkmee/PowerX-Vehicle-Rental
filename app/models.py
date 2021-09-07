@@ -38,10 +38,12 @@ class User(UserMixin, db.Model):
 
 class Customer(User):
 	balance = db.Column(db.Float(64))
+	transaction = db.relationship('Transaction', backref='customer',lazy='dynamic')
 	
-	def __init__(self):
+	def __init__(self, username):
 		self.balance = 0
 		self.type = 'customer'
+		self.username = username
 
 	def check_balance(self):
 		return self.balance
@@ -75,6 +77,7 @@ class Vehicle(db.Model):
 	odometer = db.Column(db.Float(64))
 	vehicle_type = db.Column(db.String(64))
 	unit_price = db.Column(db.Float(64))
+	transaction = db.relationship('Transaction', backref='vehicle', lazy='dynamic')
 	# update odo
 
 	def update_odo(self, new_odo):
@@ -96,6 +99,12 @@ class Lorry(Vehicle):
 		self.unit_price = 120.0
 		self.vehicle_type = 'Lorry'
 	
+class Transaction(db.Model):
+	
+	__tablename__ = 'transactions'
+	id = db.Column(db.Integer, primary_key=True)
+	uid = db.Column(db.Integer, db.ForeignKey('user.id'))
+	vid = db.Column(db.Integer, db.ForeignKey('vehicle.id'))
 
-
+# Transaction('backref'='obj', ....)
 
