@@ -16,6 +16,11 @@
             <h4>{{vehicle.vehicle_num}}</h4>
             <h4>{{vehicle.model_number}}</h4>
             <h4>{{vehicle.odometer}}</h4>
+
+            <form  action="/removevehicle" method="POST">
+                <button name='id' value={{vehicle.id}} type="submit">Remove Vehicle</button>
+            </form>
+
         </div>
 
 

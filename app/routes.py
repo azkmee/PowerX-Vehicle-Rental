@@ -132,6 +132,19 @@ def addadmin():
 		db.session.commit()
 		return redirect('/addadmin')
 	return render_template('add_admin.html', title='Balance',form=form, user=user, type=user.type)
+
+@application.route('/removevehicle', methods=["GET","POST"])
+def remove_vehicle():
+	# Vehicle.query.filter_by(id=vid).delete()
+	# db.session.commit()
+	data = request.form.to_dict()
+	vid = data['id']
+
+	Vehicle.query.filter_by(id=vid).delete()
+	db.session.commit()
+	print('vehicle ' +vid + ' removed', file=sys.stderr)
+	return redirect('/addvehicle')
+
 	
 @application.route('/addvehicle', methods=["GET","POST"])
 @login_required
@@ -142,10 +155,9 @@ def addvehicle():
 
 	vehicles = Vehicle.query.all()
 
-
 	form = AddVehicleForm()
 	if form.validate_on_submit():
-		print('validating', file=sys.stderr)
+		
 		type = form.vehicleType.data
 		vehicle_num = form.vehicleNum.data
 		modelNumber = form.modelNumber.data
@@ -174,14 +186,6 @@ def addvehicle():
 		print(vehicle, file=sys.stderr)
 
 		return redirect('/addvehicle')
-	return render_template('add_vehicle.html', title='Add Vehicle',form=form, type=user.type, vehicles=vehicles)
-
-
-
-	# vehicleType = RadioField('Vehicle Type', choices = [('Car', 'Car'),('Lorry','Lorry'),('Van','Van')])
-	# vehicleNum = StringField('Vehicle Number', validators=[DataRequired()])
-	# modelNumber = StringField('Model Number', validators=[DataRequired()])
-	# purchaseDate = DateField('Purchase Date', validators=[DataRequired()])
-	# odometer = DecimalField('Odometer', validators= [DataRequired()] )
-	# submit = SubmitField('Add Vehicle')
+	return render_template('add_vehicle.html', title='Add Vehicle',
+		form=form, type=user.type, vehicles=vehicles)
 
