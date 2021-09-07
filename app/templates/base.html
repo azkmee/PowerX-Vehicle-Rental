@@ -1,9 +1,9 @@
 {% extends "bootstrap/base.html" %}
 {% block title %}
       {% if title %}
-      {{ title }} - PowerX Vehicle Rental
+      {{ title }} - Capstone Project 
       {% else %}
-      Welcome to PowerX Vehicle Rental
+      Welcome to Our Capstone Project 
       {% endif %}
 {% endblock %}
 
@@ -11,22 +11,33 @@
   <nav class="navbar  navbar-expand-lg navbar-light bg-light">
     <div class="container">
 
-        <a class="navbar-brand" href="{{ url_for('index') }}">PowerX Vehicle Rental - Capstone Project</a>
+        <a class="navbar-brand" href="{{ url_for('index') }}">Capstone Project</a>
         <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
         </button>
 
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item"><a class="nav-link" href="{{ url_for('index') }}">Home</a></li>
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('users') }}">Users</a></li>
+          
+          {% if type=='admin' %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('addadmin') }}">Add Admin</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('addvehicle') }}">Add Vehicle</a></li>
+          {% elif type=='customer' %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('balance') }}">Balance</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('selectVehicle') }}">Book Vehicle</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('selectRentOutVehicle') }}">Dispatch Vehicle</a></li>
+          {% else %}
+          
+          {% endif %}
+            
+            
+            
+            
         </ul>
         <ul class="navbar-nav navbar-right">
           {% if current_user.is_anonymous %}
           <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Login</a></li>
           {% else %}
-            {% if current_user.usertype == "Customer" %}
-            <li class="nav-item"><a class="nav-link" href="{{ url_for('topUp') }}">Wallet: ${{ current_user.wallet }}</a></li>
-            {% endif %}
           <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Logout</a></li>
           {% endif %}
         </ul>

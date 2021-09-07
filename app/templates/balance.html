@@ -4,16 +4,14 @@
 {% block app_content %}
 
     <h1>Hi {{current_user.username}}</h1>
-    <h3>You have ${{ current_user.wallet }} in my wallet</h3>
+    <h3>You have ${{ balance }} in my wallet</h3> 
     <p>Please enter amount to top up:</p>
     <!-- <form action='/topup' method="POST">
         <input type='text' name='value'>
         <button onClick="console.log('here')" type='submit'>Submit</button>
     </form> -->
-    <div class="row">
-        <div class="col-md-4">
-            {{ wtf.quick_form(form) }}
-        </div>
+    <div class="col-md-4">
+        {{ wtf.quick_form(form) }}
     </div>
     
 

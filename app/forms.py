@@ -1,7 +1,6 @@
-import wtforms
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, SelectMultipleField, IntegerField, \
-    HiddenField, DecimalField, FloatField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DecimalField, RadioField, DateField, \
+    SelectMultipleField, IntegerField, HiddenField, SelectField, FloatField
 from wtforms.validators import DataRequired, ValidationError, EqualTo, NumberRange
 from app.models import User
 
@@ -14,17 +13,10 @@ class LoginForm(FlaskForm):
 
 
 class RegistrationForm(FlaskForm):
-    isadmin = BooleanField("Admin")
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     password2 = PasswordField('Repeat Password',
                               validators=[DataRequired(), EqualTo('password')])
-
-    dob = DateField("Date of Birth", validators=[DataRequired()], format='%d/%m/%Y')
-    email = StringField('Email', validators=[DataRequired()])
-    mobile = StringField('Mobile', validators=[DataRequired()])
-    address = StringField('Address', validators=[DataRequired()])
-
     submit = SubmitField('Register')
 
     def validate_username(self, username):
@@ -34,5 +26,52 @@ class RegistrationForm(FlaskForm):
 
 
 class TopUpForm(FlaskForm):
-    value = FloatField('Top Up Value', validators=[DataRequired()])
+    value = DecimalField('Top Up Value', validators=[NumberRange(min=0, max=100, message='bla')])
     submit = SubmitField('Top Up')
+
+
+class AddAdminForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Add admin')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different username.')
+
+
+class AddVehicleForm(FlaskForm):
+    vehicleType = RadioField('Vehicle Type', choices=[('Car', 'Car'), ('Lorry', 'Lorry'), ('Van', 'Van')],
+                             validators=[DataRequired()])
+    vehicleNum = StringField('Vehicle Number', validators=[DataRequired()])
+    modelNumber = StringField('Model Number', validators=[DataRequired()])
+    # purchaseDate = DateField('Purchase Date', validators=[DataRequired()])
+    odometer = DecimalField('Odometer', validators=[DataRequired()])
+    submit = SubmitField('Add Vehicle')
+
+
+class GetAvailableVehicles(FlaskForm):
+    vehicleType = RadioField('Vehicle Type', choices=[('Car', 'Car'), ('Lorry', 'Lorry'), ('Van', 'Van')],
+                             validators=[DataRequired()])
+    startDate = DateField("Starting from (D/M/YYYY)", validators=[DataRequired()], format="%d/%m/%Y")
+    endDate = DateField("Ending at (D/M/YYYY)", validators=[DataRequired()], format="%d/%m/%Y")
+    submit = SubmitField("Search")
+
+
+#ref: https://stackoverflow.com/questions/59554877/flask-form-with-parameters
+class BookVehicle(FlaskForm):
+    vehicleNum = SelectField("Vehicle Number", choices=[], validators=[DataRequired()])
+    submit = SubmitField("Book!")
+
+    # def __init__(self, vehicleList, *args, **kwargs):
+    #     super().__init__(*args, **kwargs)
+    #     self.choiceslist = [(v.id, v.vehicle_num) for v in vehicleList]
+    #     self.vehicleNum.choices = self.choiceslist
+    #     print(self.choiceslist)
+    #     print(self.vehicleNum)
+    #     print(self.submit)
+
+class SelectRentOutVehicle(FlaskForm):
+    vehicleNum = SelectField("Vehicle Number", choices=[], validators=[DataRequired()])
+    odoStart = FloatField("Odometer Reading", validators=[DataRequired()])
