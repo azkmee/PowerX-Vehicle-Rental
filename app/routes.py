@@ -205,9 +205,16 @@ def addvehicle():
 # ref: https://stackoverflow.com/questions/17057191/redirect-while-passing-arguments
 # ref: https://stackoverflow.com/questions/8895208/sqlalchemy-how-to-filter-date-field
 @application.route('/select', methods=["GET", "POST"])
-@login_required
+# @login_required
 def selectVehicle():
     selectionForm = GetAvailableVehicles()
+    if current_user.is_anonymous:
+        class User():
+            type = None
+        user = User()
+    else:
+        user = Customer.query.filter_by(username = current_user.username).first()
+    
     bookingForm = None
     vehicles = None
     if selectionForm.validate_on_submit():
@@ -267,12 +274,18 @@ def selectVehicle():
     #         #REDIRECT
     #         return render_template("select_vehicle.html", selectionForm=selectionForm, bookingForm=bookingForm, vehicles=vehicles)
 
-    return render_template("select_vehicle.html", selectionForm=selectionForm)
+    return render_template("select_vehicle.html", selectionForm=selectionForm, type=user.type)
 
 
 @application.route('/book', methods=["GET", "POST"])
-@login_required
+# @login_required
 def bookVehicle():
+    if current_user.is_anonymous:
+        class User():
+            type = None
+        user = User()
+    else:
+        user = Customer.query.filter_by(username = current_user.username).first()    
     vid = ss["vid"]
     startDate = ss["start"]
     endDate = ss["end"]
@@ -297,7 +310,7 @@ def bookVehicle():
 
         return redirect(url_for("index"))
 
-    return render_template("book_vehicle.html", startDate=startDate,
+    return render_template("book_vehicle.html", startDate=startDate, type=user.type,
                            endDate=endDate, vehicles=vehicles, bookingForm=form)
 
 
