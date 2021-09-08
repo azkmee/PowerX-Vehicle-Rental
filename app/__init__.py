@@ -17,5 +17,5 @@ bootstrap = Bootstrap(application)
 # set voc=False if you run on local computer
 application.wsgi_app = PrefixMiddleware(application.wsgi_app, voc=False)
 
-
-from app import routes, models
+from app.routes import admin, customer, public
+from app import models
