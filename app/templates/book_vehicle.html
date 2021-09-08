@@ -44,11 +44,12 @@
       </table>
     <p></p>
 <!--    Form for selecting vehicle    -->
+    {% if type == 'customer' %}
     <div class="col-md-4">
       {{ wtf.quick_form(bookingForm)}}
     </div>
     {% endif %}
-
+    {% endif %}
   </div>
 	
 {% endblock %}

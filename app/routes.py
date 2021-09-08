@@ -106,17 +106,17 @@ def topUp():
         return redirect('/balance')
 
 
-@application.route('/deduct', methods=["GET", "POST"])
-def deduct():
-    if request.method == 'POST':
-        user = User.query.filter_by(username=current_user.username).first()
-        req = request.form
-        value = req['value']
+# @application.route('/deduct', methods=["GET", "POST"])
+# def deduct():
+#     if request.method == 'POST':
+#         user = User.query.filter_by(username=current_user.username).first()
+#         req = request.form
+#         value = req['value']
 
-        new_balance = user.deduct_balance(float(value))
-        db.session.commit()
+#         new_balance = user.deduct_balance(float(value))
+#         db.session.commit()
 
-    # return redirect('/balance')
+#     # return redirect('/balance')
 
 
 # Admin Routes
@@ -205,8 +205,14 @@ def addvehicle():
 # ref: https://stackoverflow.com/questions/17057191/redirect-while-passing-arguments
 # ref: https://stackoverflow.com/questions/8895208/sqlalchemy-how-to-filter-date-field
 @application.route('/select', methods=["GET", "POST"])
-@login_required
+# @login_required
 def selectVehicle():
+    if current_user.is_anonymous:
+        class UserAnon:
+            type=None
+        user = UserAnon()
+    else:
+        user = User.query.filter_by(username=current_user.username).first()
     selectionForm = GetAvailableVehicles()
     bookingForm = None
     vehicles = None
@@ -267,12 +273,18 @@ def selectVehicle():
     #         #REDIRECT
     #         return render_template("select_vehicle.html", selectionForm=selectionForm, bookingForm=bookingForm, vehicles=vehicles)
 
-    return render_template("select_vehicle.html", selectionForm=selectionForm, type='customer')
+    return render_template("select_vehicle.html", selectionForm=selectionForm, type=user.type)
 
 
 @application.route('/book', methods=["GET", "POST"])
-@login_required
+# @login_required
 def bookVehicle():
+    if current_user.is_anonymous:
+        class UserAnon:
+            type=None
+        user = UserAnon()
+    else:
+        user = User.query.filter_by(username=current_user.username).first()
     vid = ss["vid"]
     startDate = ss["start"]
     endDate = ss["end"]
@@ -299,7 +311,7 @@ def bookVehicle():
         return redirect(url_for("selectPayTransaction"))
 
     return render_template("book_vehicle.html", startDate=startDate,
-                           endDate=endDate, vehicles=vehicles, bookingForm=form, type='customer')
+                           endDate=endDate, vehicles=vehicles, bookingForm=form, type=user.type)
 
 
 #
