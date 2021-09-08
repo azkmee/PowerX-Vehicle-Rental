@@ -30,17 +30,15 @@ class TopUpForm(FlaskForm):
     submit = SubmitField('Top Up')
 
 
-class AddAdminForm(FlaskForm):
-    username = StringField('Username', validators=[DataRequired()])
-    password = PasswordField('Password', validators=[DataRequired()])
-    password2 = PasswordField('Repeat Password',
-                            validators=[DataRequired(), EqualTo('password')])
+class AddAdminForm(RegistrationForm):
+    # username = StringField('Username', validators=[DataRequired()])
+    # password = PasswordField('Password', validators=[DataRequired()])
     submit = SubmitField('Add admin')
 
-    def validate_username(self, username):
-        user = User.query.filter_by(username=username.data).first()
-        if user is not None:
-            raise ValidationError('Please use a different username.')
+    # def validate_username(self, username):
+    #     user = User.query.filter_by(username=username.data).first()
+    #     if user is not None:
+    #         raise ValidationError('Please use a different username.')
 
 
 class AddVehicleForm(FlaskForm):
@@ -56,15 +54,6 @@ class TopUpForm(FlaskForm):
 	value = DecimalField('Top Up Value', validators= [NumberRange(min=0, max=100, message='bla')] )
 	submit = SubmitField('Top Up')
 
-class AddAdminForm(FlaskForm):
-	username = StringField('Username', validators=[DataRequired()])
-	password = PasswordField('Password', validators=[DataRequired()])
-	submit = SubmitField('Add admin')
-	
-	def validate_username(self, username):
-		user = User.query.filter_by(username=username.data).first()
-		if user is not None:
-			raise ValidationError('Please use a different username.')
 
 
 class AddVehicleForm(FlaskForm):
