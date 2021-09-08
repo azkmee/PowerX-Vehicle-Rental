@@ -267,7 +267,7 @@ def selectVehicle():
     #         #REDIRECT
     #         return render_template("select_vehicle.html", selectionForm=selectionForm, bookingForm=bookingForm, vehicles=vehicles)
 
-    return render_template("select_vehicle.html", selectionForm=selectionForm)
+    return render_template("select_vehicle.html", selectionForm=selectionForm, type='customer')
 
 
 @application.route('/book', methods=["GET", "POST"])
@@ -299,7 +299,7 @@ def bookVehicle():
         return redirect(url_for("selectPayTransaction"))
 
     return render_template("book_vehicle.html", startDate=startDate,
-                           endDate=endDate, vehicles=vehicles, bookingForm=form)
+                           endDate=endDate, vehicles=vehicles, bookingForm=form, type='customer')
 
 
 #
@@ -362,9 +362,9 @@ def selectPayTransaction():
             qry2.state = "Paid"
             db.session.commit()
             flash("Successfully Paid!")
-            return render_template("select_paytransaction.html", transvehicle=qry1, form=form)
+            return render_template("select_paytransaction.html", transvehicle=qry1, form=form, type='customer')
 
-    return render_template("select_paytransaction.html", transvehicle=qry1, form=form)
+    return render_template("select_paytransaction.html", transvehicle=qry1, form=form, type='customer')
 
 
 # @application.route('/paytransaction', methods=["GET", "POST"])
@@ -406,7 +406,7 @@ def selectRentOutVehicle():
         db.session.commit()
         flash("Successfully dispatched your vehicle!")
         return redirect(url_for("index"))
-    return render_template("select_rentout.html", transvehicle=qry1, form=form)
+    return render_template("select_rentout.html", transvehicle=qry1, form=form, type='customer')
 
 
 
@@ -453,6 +453,6 @@ def selectReturnVehicle():
         flash("Successfully returned your vehicle!")
         return redirect(url_for("index"))
 
-    return render_template("select_return.html", transvehicle=qry1, form=form)
+    return render_template("select_return.html", transvehicle=qry1, form=form, type='customer')
 
 
