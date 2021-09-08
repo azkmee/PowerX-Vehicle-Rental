@@ -1,16 +1,20 @@
 from werkzeug import useragents
 from app import db
 from app import login
-from datetime import datetime 
+from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
 # example of how to create association table
-#association_table = db.Table('association', 
+# association_table = db.Table('association',
 #    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
 #    db.Column('challenge_id', db.Integer, db.ForeignKey('challenge.id'))
-#)
+# )
+
+# have a master user that can create a admin user
+# normal user register normally
+
 
 # have a master user that can create a admin user
 # normal user register normally
@@ -18,7 +22,8 @@ from werkzeug.security import generate_password_hash, check_password_hash
 
 @login.user_loader
 def load_user(id):
-	return User.query.get(int(id))
+    return User.query.get(int(id))
+
 
 class User(UserMixin, db.Model):
 	__tablename__ = 'user'
@@ -73,7 +78,7 @@ class Vehicle(db.Model):
 	id = db.Column(db.Integer, primary_key=True)
 	vehicle_num = db.Column(db.String(64))
 	model_number = db.Column(db.String(64))
-	purchase_date = db.Column(db.String(64))
+	# purchase_date = db.Column(db.String(64))
 	odometer = db.Column(db.Float(64))
 	vehicle_type = db.Column(db.String(64))
 	unit_price = db.Column(db.Float(64))
@@ -99,12 +104,17 @@ class Lorry(Vehicle):
 		self.unit_price = 120.0
 		self.vehicle_type = 'Lorry'
 	
+
 class Transaction(db.Model):
-	
-	__tablename__ = 'transactions'
-	id = db.Column(db.Integer, primary_key=True)
-	uid = db.Column(db.Integer, db.ForeignKey('user.id'))
-	vid = db.Column(db.Integer, db.ForeignKey('vehicle.id'))
-
-# Transaction('backref'='obj', ....)
-
+    __tablename__ = 'transactions'
+    id = db.Column(db.Integer, primary_key=True, auto_increment=True)
+    vid = db.Column(db.Integer, index=True)
+    cid = db.Column(db.Integer, index=True)
+    book_duration = db.Column(db.Integer)  # User will book
+    start_date = db.Column(db.Date)  # User will book
+    end_date = db.Column(db.Date)  # Updates when User returns
+    start_odo = db.Column(db.Float())
+    end_odo = db.Column(db.Float())
+    amount = db.Column(db.Float())
+    additional_fee = db.Column(db.Float())
+    state = db.Column(db.String(10))
