@@ -92,12 +92,12 @@ class Vehicle(db.Model):
 class Car(Vehicle):
 	def __init__(self):
 		self.unit_price = 90.0
-		self.vehicle_type = 'car'
+		self.vehicle_type = 'Car'
 
 class Van(Vehicle):
 	def __init__(self):
 		self.unit_price = 100.0
-		self.vehicle_type = 'van'
+		self.vehicle_type = 'Van'
 
 class Lorry(Vehicle):
 	def __init__(self):
