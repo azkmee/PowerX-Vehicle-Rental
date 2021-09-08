@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block app_content %}
+	<h1> Dispatch your Vehicle </h1>
+	<p> Select a transaction and click Dispatch! </a></p>
+	<div class="row">
+    <div class="col-md-4">
+      All transactions that are paid, ready for dispatch.
+    </div>
+    <div class="column">
+<!--      <button><a href="{{  url_for('selectVehicle')  }}">Back</a></button>-->
+      <button><a href="{{  url_for('index')  }}">Cancel</a></button>
+    </div>
+<!--    Table for querying transactions    -->
+    {% if transvehicle != None %}
+
+      <table class="table table-striped" >
+        <thead>
+          <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Vehicle Plate</th>
+            <th scope="col">Model</th>
+            <th scope="col">Starting Date</th>
+            <th scope="col">Booked Days</th>
+            <th scope="col">Price</th>
+            <th scope="col">Odometer</th>
+            <th scope="col">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for idx in range(transvehicle|length) %}
+          <tr>
+<!--            <th scope="row" class="lead">{{ idx+1 }}</th>-->
+            <td class="lead">
+              {{ transvehicle[idx][0].id }}
+            </td>
+            <td class="lead">
+              {{ transvehicle[idx][1].vehicle_num }}
+            </td>
+            <td class="lead">
+              {{ transvehicle[idx][1].model_number }}
+            </td>
+            <td class="lead">
+              {{ transvehicle[idx][0].start_date.strftime("%d/%m/%Y") }}
+            </td>
+            <td class="lead">
+              {{ transvehicle[idx][0].book_duration }}
+            </td>
+            <td class="lead">
+              {{ transvehicle[idx][0].amount }}
+            </td>
+            <td class="lead">
+              {{ transvehicle[idx][1].odometer }}
+            </td>
+            <td class="lead">
+              {{ transvehicle[idx][0].state }}
+            </td>
+          </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+    <p></p>
+<!--    Form for selecting vehicle    -->
+    <div class="col-md-4">
+      {{ wtf.quick_form(form)}}
+    </div>
+    {% endif %}
+
+  </div>
+
+{% endblock %}

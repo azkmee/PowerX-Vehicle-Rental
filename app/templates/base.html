@@ -23,11 +23,13 @@
           <li class="nav-item"><a class="nav-link" href="{{ url_for('addadmin') }}">Add Admin</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('addvehicle') }}">Add Vehicle</a></li>
           {% elif type=='customer' %}
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('balance') }}">Wallet</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('balance') }}">Balance</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('selectVehicle') }}">Book Vehicle</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('selectPayTransaction') }}">Manage Payments</a></li>
           <li class="nav-item"><a class="nav-link" href="{{ url_for('selectRentOutVehicle') }}">Dispatch Vehicle</a></li>
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('selectReturnVehicle') }}">Return Vehicle</a></li>
           {% else %}
-          <li class="nav-item"><a class="nav-link" href="{{ url_for('selectVehicle') }}">Available Vehicles</a></li>
+          
           {% endif %}
             
             
