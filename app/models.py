@@ -44,8 +44,8 @@ class User(UserMixin, db.Model):
 
 class Customer(User):
     balance = db.Column(db.Float(64))
-    # transaction = db.relationship('Transaction', backref='customer',lazy='dynamic')
-	
+    transaction = db.relationship('Transaction', backref='customer', lazy='dynamic')
+
     def __init__(self, username):
         self.balance = 0
         self.type = 'customer'
@@ -53,15 +53,15 @@ class Customer(User):
 
     def check_balance(self):
         return self.balance
-	
+
     def deduct_balance(self, value):
         self.balance = self.balance - value
         return self.balance
-	
+
     def add_balance(self, value):
         self.balance = self.balance + value
         return self.balance
-	
+
 
 class AdminUser(User):
     def __init__(self, username):
@@ -114,10 +114,10 @@ class Lorry(Vehicle):
 class Transaction(db.Model):
     __tablename__ = 'transactions'
     id = db.Column(db.Integer, primary_key=True)
-    # cid = db.Column(db.Integer, db.ForeignKey('user.id'))
-    # vid = db.Column(db.Integer, db.ForeignKey('vehicle.id'))
-    vid = db.Column(db.Integer, index=True)
-    cid = db.Column(db.Integer, index=True)
+    cid = db.Column(db.Integer, db.ForeignKey('user.id'))
+    vid = db.Column(db.Integer, db.ForeignKey('vehicle.id'))
+    # vid = db.Column(db.Integer, index=True)
+    # cid = db.Column(db.Integer, index=True)
     book_duration = db.Column(db.Integer)  # User will book
     start_date = db.Column(db.Date)  # User will book
     end_date = db.Column(db.Date)  # Updates when User returns

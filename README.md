@@ -25,9 +25,19 @@ There are 2 types of users:
    - Book any available vehicles and return after use
    - Make payments by using the Wallet system 
 
+### UML Diagrams 
 
+#### Behavioral Model 
 
-[Add more contents]
+The following is the Use Case Diagram  showing the  possible use case scenario. 
+
+![UseCase](/docs/png/use_case_diagram4.png)
+
+#### Data Model 
+
+The following is the Entity Relationship Diagram showing the underlying data model. The entire project is built based on this model. 
+
+![ERD](/docs/png/er_diagram4.png)
 
 
 

@@ -30,6 +30,17 @@ class TopUpForm(FlaskForm):
     submit = SubmitField('Top Up')
 
 
+class AddAdminForm(FlaskForm):
+    username = StringField('Username', validators=[DataRequired()])
+    password = PasswordField('Password', validators=[DataRequired()])
+    submit = SubmitField('Add admin')
+
+    def validate_username(self, username):
+        user = User.query.filter_by(username=username.data).first()
+        if user is not None:
+            raise ValidationError('Please use a different username.')
+
+
 class AddVehicleForm(FlaskForm):
     vehicleType = RadioField('Vehicle Type', choices=[('Car', 'Car'), ('Lorry', 'Lorry'), ('Van', 'Van')],
                              validators=[DataRequired()])
@@ -87,7 +98,18 @@ class BookVehicle(FlaskForm):
     #     print(self.vehicleNum)
     #     print(self.submit)
 
+class SelectPayTransaction(FlaskForm):
+    tid = SelectField("Transaction ID", choices=[], validators=[DataRequired()])
+    submit = SubmitField("Pay!")
+
 
 class SelectRentOutVehicle(FlaskForm):
     vehicleNum = SelectField("Vehicle Number", choices=[], validators=[DataRequired()])
-    odoStart = FloatField("Odometer Reading", validators=[DataRequired()])
+    submit = SubmitField("Dispatch!")
+
+class SelectReturnVehicle(FlaskForm):
+    vehicleNum = SelectField("Vehicle Number", choices=[], validators=[DataRequired()])
+    odo = FloatField("Final Odometer Reading", validators=[DataRequired()])
+    datereturn = DateField("Return Date (D/M/YYYY)", validators=[DataRequired()], format="%d/%m/%Y")
+    submit = SubmitField("Return!")
+
