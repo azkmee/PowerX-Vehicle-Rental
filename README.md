@@ -5,7 +5,31 @@ Final Project for the subject Fundamentals in Python (Intermediate) in PowerX Pr
 
 - Evaluators: Oka Kurniawan, Kenny Choo
 
-Software Documentation: <a href="docs/html-docs/index.html" target="_blank">Click Here</a>
+Software Documentation (UML): <a href="docs/html-docs/index.html" target="_blank">Click Here</a>
+
+## Introduction 
+
+PowerX Vehicle Rental is a software that is intended to manage the booking of vehicles for rent. This digital workflow makes the entire process of booking vehicles much more convenient without having the need to maintain physical log books. This also includes making the payment as well by using the Wallet system that comes with the software. 
+
+## Structure of PowerX Vehicle Rental 
+
+There are 2 types of users: 
+
+1. Admin 
+   - Staff of PowerX Vehicle Rental company 
+   - Ability to Add Admins
+   - Special rights to Add/Delete vehicles 
+2. Customer
+   - Registered users of PowerX Vehicle Rental 
+   - New customers can register a new account 
+   - Book any available vehicles and return after use
+   - Make payments by using the Wallet system 
+
+
+
+[Add more contents]
+
+
 
 ## Setup
 

@@ -10,20 +10,51 @@
             {{ wtf.quick_form(form) }}
         </div>
     </div>
-    {% for vehicle in vehicles %}
-        <div class='border border-primary'>
-            <h3>{{vehicle.type}}</h3>
-            <h4>{{vehicle.vehicle_num}}</h4>
-            <h4>{{vehicle.model_number}}</h4>
-            <h4>{{vehicle.odometer}}</h4>
 
-            <form  action="/removevehicle" method="POST">
-                <button name='id' value={{vehicle.id}} type="submit">Remove Vehicle</button>
-            </form>
+    {% if vehicles != None %}
 
-        </div>
+    <table class="table table-striped" >
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Vehicle Type</th>
+          <th scope="col">Vehicle Plate</th>
+          <th scope="col">Model</th>
+          <th scope="col">Price</th>
+          <th scope="col">Odometer(KM)</th>
+          <th scope="col">Action</th>
 
+        </tr>
+      </thead>
+      <tbody>
+        {% for idx in range(vehicles|length) %}
+        <tr>
+            <th scope="row" class="lead">{{ idx+1 }}</th>
+            <td class="lead">
+            {{ vehicles[idx].vehicle_type }}
+            </td>
+            <td class="lead">
+            {{ vehicles[idx].vehicle_num }}
+            </td>
+            <td class="lead">
+                {{ vehicles[idx].model_number }}
+            </td>
+            <td class="lead">
+            {{ vehicles[idx].odometer }}
+            </td>
+            <td class="lead">
+                {{ vehicles[idx].unit_price }}
+            </td>
+            <td class="lead">
+                <form  action="/removevehicle" method="POST">
+                    <button name='id' value={{vehicles[idx].id}} type="submit">Remove Vehicle</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% endif %}
 
-    {% endfor %}
-
+    
 {% endblock %}

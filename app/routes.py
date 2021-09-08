@@ -90,107 +90,109 @@ def balance():
         db.session.commit()
         return redirect('/balance')
     return render_template('balance.html', title='Balance',
-                        balance=user.balance, form=form, user=user, type=user.type)
+                           balance=user.balance, form=form, user=user, type=user.type)
 
-@application.route('/topup', methods=["GET","POST"])
+
+@application.route('/topup', methods=["GET", "POST"])
 def topUp():
-	if request.method == 'POST':
-		user = User.query.filter_by(username = current_user.username).first()
-		req = request.form
-		value = req['value']
-		
-		new_balance = user.add_balance(float(value))
-		db.session.commit()
-		print(new_balance, file=sys.stderr)
-		return redirect('/balance')
+    if request.method == 'POST':
+        user = User.query.filter_by(username=current_user.username).first()
+        req = request.form
+        value = req['value']
 
-@application.route('/deduct', methods=["GET","POST"])
+        new_balance = user.add_balance(float(value))
+        db.session.commit()
+        print(new_balance, file=sys.stderr)
+        return redirect('/balance')
+
+
+@application.route('/deduct', methods=["GET", "POST"])
 def deduct():
-	if request.method == 'POST':
-		user = User.query.filter_by(username = current_user.username).first()
-		req = request.form
-		value = req['value']
-		
-		new_balance = user.deduct_balance(float(value))
-		db.session.commit()
-		
-		# return redirect('/balance')
+    if request.method == 'POST':
+        user = User.query.filter_by(username=current_user.username).first()
+        req = request.form
+        value = req['value']
 
-#Admin Routes
-@application.route('/addadmin', methods=["GET","POST"])
+        new_balance = user.deduct_balance(float(value))
+        db.session.commit()
+
+    # return redirect('/balance')
+
+
+# Admin Routes
+@application.route('/addadmin', methods=["GET", "POST"])
 @login_required
 def addadmin():
-	user = AdminUser.query.filter_by(username = current_user.username).first()
-	if user.type != 'admin':
-		return redirect('/')
+    user = AdminUser.query.filter_by(username=current_user.username).first()
+    if user.type != 'admin':
+        return redirect('/')
 
-	form = AddAdminForm()
-	# print(user.admin, file=sys.stderr)
+    form = AddAdminForm()
+    # print(user.admin, file=sys.stderr)
 
-	if form.validate_on_submit():
-		admin_username = form.username.data
-		admin_password = form.password.data
-		new_admin = user.add_admin_user([admin_username, admin_password])
-		db.session.add(new_admin)
-		db.session.commit()
-		return redirect('/addadmin')
-	return render_template('add_admin.html', title='Balance',form=form, user=user, type=user.type)
+    if form.validate_on_submit():
+        admin_username = form.username.data
+        admin_password = form.password.data
+        new_admin = user.add_admin_user([admin_username, admin_password])
+        db.session.add(new_admin)
+        db.session.commit()
+        return redirect('/addadmin')
+    return render_template('add_admin.html', title='Balance', form=form, user=user, type=user.type)
 
-@application.route('/removevehicle', methods=["GET","POST"])
+
+@application.route('/removevehicle', methods=["GET", "POST"])
 def remove_vehicle():
+    data = request.form.to_dict()
+    vid = data['id']
 
-	data = request.form.to_dict()
-	vid = data['id']
+    Vehicle.query.filter_by(id=vid).delete()
+    db.session.commit()
+    print('vehicle ' + vid + ' removed', file=sys.stderr)
+    return redirect('/addvehicle')
 
-	Vehicle.query.filter_by(id=vid).delete()
-	db.session.commit()
-	print('vehicle ' +vid + ' removed', file=sys.stderr)
-	return redirect('/addvehicle')
 
-	
-@application.route('/addvehicle', methods=["GET","POST"])
+@application.route('/addvehicle', methods=["GET", "POST"])
 @login_required
 def addvehicle():
-	user = AdminUser.query.filter_by(username = current_user.username).first()
-	if user.type != 'admin':
-		return redirect('/')
+    user = AdminUser.query.filter_by(username=current_user.username).first()
+    if user.type != 'admin':
+        return redirect('/')
 
-	vehicles = Vehicle.query.all()
+    vehicles = Vehicle.query.all()
 
-	form = AddVehicleForm()
-	if form.validate_on_submit():
-		
-		type = form.vehicleType.data
-		vehicle_num = form.vehicleNum.data
-		modelNumber = form.modelNumber.data
-		# purchaseDate = form.purchaseDate.data
-		odometer = form.odometer.data
+    form = AddVehicleForm()
+    if form.validate_on_submit():
 
-		if type == 'Car':
-			vehicle = Car()
+        type = form.vehicleType.data
+        vehicle_num = form.vehicleNum.data
+        modelNumber = form.modelNumber.data
+        # purchaseDate = form.purchaseDate.data
+        odometer = form.odometer.data
 
-		elif type == 'Van':
-			vehicle = Van()
+        if type == 'Car':
+            vehicle = Car()
 
-		elif type == 'Lorry':
-			vehicle = Lorry()
-		else:
-			return redirect('/')
+        elif type == 'Van':
+            vehicle = Van()
 
-		vehicle.vehicle_num = vehicle_num
-		vehicle.model_number = modelNumber
-		# vehicle.purchase_date = purchaseDate
-		vehicle.odometer = odometer
+        elif type == 'Lorry':
+            vehicle = Lorry()
+        else:
+            return redirect('/')
 
-		db.session.add(vehicle)
-		db.session.commit()
+        vehicle.vehicle_num = vehicle_num
+        vehicle.model_number = modelNumber
+        # vehicle.purchase_date = purchaseDate
+        vehicle.odometer = odometer
 
-		print(vehicle, file=sys.stderr)
+        db.session.add(vehicle)
+        db.session.commit()
 
-		return redirect('/addvehicle')
-	return render_template('add_vehicle.html', title='Add Vehicle',
-		form=form, type=user.type, vehicles=vehicles)
+        print(vehicle, file=sys.stderr)
 
+        return redirect('/addvehicle')
+    return render_template('add_vehicle.html', title='Add Vehicle',
+                           form=form, type=user.type, vehicles=vehicles)
 
 
 # vehicleType = RadioField('Vehicle Type', choices = [('Car', 'Car'),('Lorry','Lorry'),('Van','Van')])
@@ -203,9 +205,16 @@ def addvehicle():
 # ref: https://stackoverflow.com/questions/17057191/redirect-while-passing-arguments
 # ref: https://stackoverflow.com/questions/8895208/sqlalchemy-how-to-filter-date-field
 @application.route('/select', methods=["GET", "POST"])
-@login_required
+# @login_required
 def selectVehicle():
     selectionForm = GetAvailableVehicles()
+    if current_user.is_anonymous:
+        class User():
+            type = None
+        user = User()
+    else:
+        user = Customer.query.filter_by(username = current_user.username).first()
+    
     bookingForm = None
     vehicles = None
     if selectionForm.validate_on_submit():
@@ -222,7 +231,7 @@ def selectVehicle():
         print("QRY", qry)
         vehicles = [v for v in qry]
         print([(v.id, v.vehicle_type) for v in vehicles])
-        #ss["vid"] = [v.id for v in vehicles]
+        # ss["vid"] = [v.id for v in vehicles]
         ss["start"] = startDate.strftime("%d/%m/%Y")
         ss["end"] = endDate.strftime("%d/%m/%Y")
         # dictparams = {"start": startDate, "end": endDate}
@@ -234,19 +243,19 @@ def selectVehicle():
         1) Check if either transaction start date or (start + duration) is within our start and end date
         2) If either case, then if it is Booked or Dispatch, Reject the vehicle
         """
-        qry2 = db.session.query(Transaction)\
+        qry2 = db.session.query(Transaction) \
             .filter(db.and_(db.or_(Transaction.start_date.between(startDate, endDate),
-                        (Transaction.start_date + Transaction.book_duration)
-                        .between(startDate, endDate)),
-                        Transaction.state.in_(["Booked", "Dispatch"])))\
+                                   (Transaction.start_date + Transaction.book_duration)
+                                   .between(startDate, endDate)),
+                            Transaction.state.in_(["Booked", "Dispatch"]))) \
             .all()
 
         rejectedVid = [t.vid for t in qry2]
         print("Rejected Vehicles", rejectedVid)
 
-        qry3 = db.session\
-            .query(Vehicle).filter(Vehicle.vehicle_type == vt)\
-            .filter(~Vehicle.id.in_(rejectedVid))\
+        qry3 = db.session \
+            .query(Vehicle).filter(Vehicle.vehicle_type == vt) \
+            .filter(~Vehicle.id.in_(rejectedVid)) \
             .all()
         filteredVehicles = [v for v in qry3]
         print("QRY3", qry3)
@@ -265,12 +274,18 @@ def selectVehicle():
     #         #REDIRECT
     #         return render_template("select_vehicle.html", selectionForm=selectionForm, bookingForm=bookingForm, vehicles=vehicles)
 
-    return render_template("select_vehicle.html", selectionForm=selectionForm)
+    return render_template("select_vehicle.html", selectionForm=selectionForm, type=user.type)
 
 
 @application.route('/book', methods=["GET", "POST"])
-@login_required
+# @login_required
 def bookVehicle():
+    if current_user.is_anonymous:
+        class User():
+            type = None
+        user = User()
+    else:
+        user = Customer.query.filter_by(username = current_user.username).first()    
     vid = ss["vid"]
     startDate = ss["start"]
     endDate = ss["end"]
@@ -295,7 +310,7 @@ def bookVehicle():
 
         return redirect(url_for("index"))
 
-    return render_template("book_vehicle.html", startDate=startDate,
+    return render_template("book_vehicle.html", startDate=startDate, type=user.type,
                            endDate=endDate, vehicles=vehicles, bookingForm=form)
 
 
@@ -343,6 +358,7 @@ def rentOutVehicle():
 def selectReturnVehicle():
     # State = Paid
     pass
+
 
 @application.route('/return', methods=["GET", "POST"])
 @login_required
